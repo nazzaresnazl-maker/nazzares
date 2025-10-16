@@ -1,0 +1,32 @@
+
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller pandas openpyxl
+
+      - name: Build EXE
+        run: |
+          pyinstaller --onefile --windowed --name "PT_Dwi_Surya_POS" main.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PT_Dwi_Surya_POS-exe
+          path: dist\PT_Dwi_Surya_POS.exe
